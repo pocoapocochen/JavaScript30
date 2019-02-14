@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Type Ahead 👀</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <form class="search-form">
+    <input type="text" class="search" placeholder="City or State">
+    <ul class="suggestions">
+      <li>Filter for a city</li>
+      <li>or a state</li>
+    </ul>
+  </form>
+
+<script>
+  
+const endpoint = 'https://gist.githubusercontent.com/Miserlou/c5cd8364bf9b2420bb29/raw/2bf258763cdddd704f8ffd3ea9a3e81d25e2c6f6/cities.json';
+
+
+// 1. announce a variable to store the data
+const cities = [];
+
+
+// 2. call ajax
+fetch(endpoint)
+  .then(response => response.json())
+  .then(data => cities.push(...data)); // use spread syntax (see video 04:10~05:44)
+
+
+// 3. create a function to filter the city or state name that is matched with the input
+function findMatch(input, cities) {
+  return cities.filter(obj => {
+    // to figure out if the city or state matches what was searched
+    const regex = new RegExp(input, 'gi') 
+    /* see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp */
+
+    return obj.city.match(regex) || obj.state.match(regex);
+
+  });
+}
+
+
+// 7. 
+function numberWithComma(num) {
+  return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+}
+/* see https://stackoverflow.com/questions/2901102/how-to-print-a-number-with-commas-as-thousands-separators-in-javascript */
+
+
+// 5. create a function to show the filter result
+function displayMatch() {
+  // get the result array
+  const matchArray = findMatch(this.value, cities);
+  
+  // create html of list items
+  const html = matchArray.map(obj => {
+    // 6. when enter letters, then show results with effect (colored the background of letters)
+    const regex = new RegExp(this.value, 'gi');
+    const cityName = obj.city.replace(regex, `<span class="hl">${this.value}</span>`);
+    const stateName = obj.state.replace(regex, `<span class="hl">${this.value}</span>`);
+
+    return `
+    <li>
+      <span class="name">${cityName}, ${stateName}</span>
+      <span class="population">${numberWithComma(obj.population)}</span>
+    </li>
+    `
+
+  }).sort().join(''); 
+  /* 
+  - use sort(), see https://guahsu.io/2017/05/JavaScript30-06-Type-Ahead/
+  - remember to use join() to covert array items to string!
+ */
+
+  list.innerHTML = html;
+
+}
+
+
+// 4. select DOM and add eventlistener
+const input = document.querySelector('.search') ;
+const list = document.querySelector('.suggestions') ;
+
+input.addEventListener('change', displayMatch);
+input.addEventListener('keyup', displayMatch);
+/* see https://ithelp.ithome.com.tw/articles/10192175 */
+
+</script>
+</body>
+</html>

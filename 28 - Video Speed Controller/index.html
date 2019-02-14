@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Video Speed Scrubber</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="wrapper">
+    <video class="flex" width="765" height="430" src="http://clips.vorwaerts-gmbh.de/VfE_html5.mp4" loop controls></video>
+    <div class="speed">
+      <div class="speed-bar">1×</div>
+    </div>
+  </div>
+
+<script>
+const video = document.querySelector('.flex');
+const speed = document.querySelector('.speed');
+const bar = document.querySelector('.speed-bar');
+
+function handleSpeed(e) {
+  // define some basic values
+  const y = e.pageY - this.offsetTop; // make sure the detect zone is in the div
+  const percent = y / this.offsetHeight;
+  const min = .5;
+  const max = 5;
+
+  // set changing value
+  const barHeight = Math.round(percent * 100);
+  const videoRate = percent * (max - min) + min;
+  
+  // set the UI and video rate
+  bar.style.height = `${barHeight}%`;
+  bar.textContent = `${videoRate.toFixed(1)}x`;
+  video.playbackRate = videoRate;
+
+  /* toFixed(): this method formats a number using fixed-point notation */
+  /* HTMLMediaElement.playbackRate: this property sets the rate at which the media is being played back. This is used to implement user controls for fast forward, slow motion, and so forth. The normal playback rate is multiplied by this value to obtain the current rate, so a value of 1.0 indicates normal speed. */
+}
+
+speed.addEventListener('mousemove', handleSpeed);
+
+
+
+</script>
+</body>
+</html>

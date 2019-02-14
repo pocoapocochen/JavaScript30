@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Understanding JavaScript's Capture</title>
+</head>
+<body class="bod">
+
+  <div class="one">
+    <div class="two">
+      <div class="three">
+      </div>
+    </div>
+  </div>
+
+  <button>Click me and I will fired only once!</button>
+
+<style>
+  html {
+    box-sizing: border-box;
+  }
+  
+  *, *:before, *:after { 
+    box-sizing: inherit; 
+  }
+
+  div {
+    width: 100%;
+    padding: 100px;
+  }
+
+  .one {
+    background: thistle;
+  }
+
+  .two {
+    background: mistyrose;
+  }
+
+  .three {
+    background: coral;
+  }
+</style>
+
+<script>
+
+  const divs = document.querySelectorAll('div');
+  const btn = document.querySelector('button');
+
+  function logText(e) {
+    // when there are nodelist, althought we just trigger one of these element, all of elements will be fired! 
+    console.log(this.classList.value);
+
+    //using stopPropagation() to prevent bubbling or capturing at one time (but it will still propagate when next event happens!)
+    e.stopPropagation();
+    /* The stopPropagation() method of the Event interface prevents further propagation of the current event in the capturing and bubbling phases. */
+
+  }
+
+  // try to set the parameter 'capture' to be true, and see the result!
+  divs.forEach(div => div.addEventListener('click', logText, {capture: false, once: true}));
+  /* capture: the third parameter, default is 'false', will execute bubbling(from inside to outside); 'true', will execute capturing(from outside to inside) refer to https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener */
+
+
+  // set the parameter 'once' to be true
+  btn.addEventListener('click', () => console.log('hi'), {once: true});
+  /* once: the third parameter, a Boolean indicating that the listener should be invoked at most once after being added. If true, the listener would be automatically removed when invoked. refer to https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener */
+
+</script>
+</body>
+</html>

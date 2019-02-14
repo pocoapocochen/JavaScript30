@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Key Detection</title>
+  <script type="text/javascript" src="http://www.cornify.com/js/cornify.js"></script>
+</head>
+<body>
+  Try to use Konami Code, and the miracle will happen!
+<script>
+
+  // 1. create an array to store the pressed keys, and set the secret code
+  const pressed = [];
+  
+  /* ! when secretCode is a string:
+  const secretCode = 'test';
+  */
+
+  /* ! when secretCode is an array */
+  const secretCode =  ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'a', 'b'];
+  
+
+
+  // 2. detect the keydown event
+  window.addEventListener('keydown', (e) => {
+    // 3.
+    // to control the pressed array's length is still equal to secretCode's length. use 'splice()'
+    // if the (secretCode.length + 1)th word is pushed into 'pressed', then the pressed[0] will be shift-out
+    // so, the first parameter of splice(), is '-pressed.length - 1'
+    // the second parameter of splice(), is 'pressed.length - secretCode.length', equal to '1'
+    pressed.push(e.key);
+    pressed.splice(-pressed.length - 1, pressed.length - secretCode.length);
+    console.log(pressed);
+
+    // 4.
+    /* ! when secretCode is a string:
+    // convert the array to string and use 'includes()' 
+    if (pressed.join('').includes(secretCode)){
+      cornify_add(); // to add unicorn image on the page (random position)
+    } 
+    */
+
+    /* ! when secretCode is an array */
+    // compare two arrays is the same or not, use 'every()' 
+    const isSame =secretCode.every((el, idx) => el === pressed[idx]);
+    console.log(isSame); 
+    if (isSame) {
+      cornify_add();
+    }
+  });
+
+  // isSame has bug!: 
+  // why only one element and the value is also 'true'? 
+
+</script>
+</body>
+</html>

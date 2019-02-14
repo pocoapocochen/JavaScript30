@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>HTML5 Canvas</title>
+</head>
+<body>
+
+  <canvas id="draw" width="800" height="800"></canvas>
+
+  <script>
+    /* tutorial:
+    -- https://www.w3schools.com/graphics/canvas_intro.asp
+    -- https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial */
+
+    // 1. set the canvas DOM 
+    const canvas = document.querySelector('#draw');
+    const content = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    // 2. set painting style
+    content.strokeStyle = '#bada55';
+    content.lineJoin = 'round';
+    content.lineCap = 'round';
+    content.lineWidth = 10;
+
+    // 3. set global state
+    let isDrawing = false;
+    let lastX = 0; // stroke's last x-coordinate
+    let lastY = 0; // stroke's last y-coordinate
+    let hue = 0;
+    let direction = true; // use direction to record the stroke thickness
+
+    // 5. set control function
+    function draw(e) {
+      // 5-1. stop the function when there are not moused down
+      if (!isDrawing) return; 
+      
+      // 5-2. change color first
+      content.strokeStyle = `hsl(${hue}, 100%, 50%)`;
+
+      // 5-3. when isDrawing... 
+      content.beginPath();
+      content.moveTo(lastX, lastY);// start from
+      content.lineTo(e.offsetX, e.offsetY);// go to
+      content.stroke();
+
+      // 5-4. then change global variables's value: x/y-coordinate, hue
+      [lastX, lastY] = [e.offsetX, e.offsetY];
+      hue++;
+      if (hue >= 360) hue = 0;
+
+      // 5-5. change stroke thickness
+      if (content.lineWidth >= 30 || content.lineWidth <= 1) {
+        direction = !direction; // flip the derection!
+      }
+      
+      // 5-6. then change global variables's value: stroke width
+      if(direction) {
+        content.lineWidth++;
+      } else {
+        content.lineWidth--;
+      }
+
+      
+
+    }
+
+    // 4. set event listener
+    canvas.addEventListener('mousedown', (e) => {
+      isDrawing = true;
+      [lastX, lastY] = [e.offsetX, e.offsetY];
+      });
+    canvas.addEventListener('mouseup', () => isDrawing = false);
+    canvas.addEventListener('mouseout', () => isDrawing = false);
+    canvas.addEventListener('mousemove', draw);
+
+
+  
+  </script>
+
+  <style>
+    html, body {
+      margin: 0;
+    }
+  </style>
+
+</body>
+</html>

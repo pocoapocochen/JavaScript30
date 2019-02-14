@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Console Tricks!</title>
+</head>
+<body>
+
+  <p onClick="makeGreen()">×BREAK×DOWN×</p> 
+  <!-- use Chrome Dev Tool to see the DOM's script:
+    1. 'Elements' -> select the element
+    2. then right-click -> 'Break On'
+    3. select 'arrtibute modifications'
+    4. refresh webpage, then trigger the event again
+  -->
+
+  <script>
+
+    function makeGreen() {
+      const p = document.querySelector('p');
+      p.style.color = '#BADA55';
+      p.style.fontSize = '50px';
+    }
+
+    const dogs = [{ name: 'Snickers', age: 2 }, { name: 'Hugo', age: 8 }];
+
+
+    ///////// console related /////////
+  
+    // Interpolated 替換 : use '%s'
+    console.log('hello %s world', 'hahahahaha');
+
+    // Styled : use '%c', no space
+    console.log('%chello world', 'background: lightgreen');
+
+
+    // Regular
+    console.log('Hi.');
+
+    // Info
+    console.info('This is so cool.')
+
+    // warning!
+    console.warn('Oops!');
+
+    // Error :|
+    console.error('Somthing Wrong!');
+
+    // clearing
+    console.clear();
+
+
+    // Testing
+    console.assert(dogs.length >= 2, 'There are two or more dogs');
+    console.assert(dogs.length < 2, 'There are just one dog or no dogs');
+
+    /* Writes an error message to the console if the assertion is false. If the assertion is true, nothing happens.
+    https://developer.mozilla.org/zh-TW/docs/Web/API/console/assert */
+
+
+    // Viewing DOM Elements
+    const p = document.querySelector('p');
+    console.log(p); // just show the element
+    console.dir(p);
+
+    /* to see all the properties of a specified JavaScript object in console by which the developer can easily get the properties of the object.
+    https://developer.mozilla.org/en-US/docs/Web/API/Console/dir */
+    
+
+    // table
+    console.table(dogs);
+
+
+    // grouping together : use 'group(Collapsed)' & 'grounpEnd' to group the console infomation
+    dogs.forEach(dog => {
+      console.group(`${dog.name}`);
+      console.log(`This is ${dog.name}`);
+      console.log(`${dog.name} is ${dog.age} years old`);
+      console.warn(`${dog.name} is hungry now!`);
+      console.groupEnd(`${dog.name}`);
+    });
+
+    // counting
+    console.count('Snickers');
+    console.count('Hugo');
+    console.count('Hugo');
+    console.count('Snickers');
+    console.count('Hugo');
+    console.count('Snickers');
+    console.count('Snickers');
+
+    // timing: call API and count the running time
+    console.time('fetching data');
+    fetch('https://api.github.com/users/wesbos')
+      .then(data => data.json())
+      .then(data => {
+        console.timeEnd('fetching data');
+      });
+  
+
+  </script>
+</body>
+</html>

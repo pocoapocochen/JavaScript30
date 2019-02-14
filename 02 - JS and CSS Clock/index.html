@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>JS + CSS Clock</title>
+</head>
+<body>
+
+
+    <div class="clock">
+      <div class="clock-face">
+        <div class="hand hour-hand"></div>
+        <div class="hand min-hand"></div>
+        <div class="hand second-hand"></div>
+        <div class="center"></div>
+      </div>
+    </div>
+
+
+  <style>
+    html {
+      background: #018ded url(http://unsplash.it/1500/1000?image=881&blur=50);
+      background-size: cover;
+      font-family: 'helvetica neue';
+      text-align: center;
+      font-size: 10px;
+    }
+
+    body {
+      margin: 0;
+      font-size: 2rem;
+      display: flex;
+      flex: 1;
+      min-height: 100vh;
+      align-items: center;
+    }
+
+    .clock {
+      width: 30rem;
+      height: 30rem;
+      border: 20px solid white;
+      border-radius: 50%;
+      margin: 50px auto;
+      position: relative;
+      padding: 2rem;
+      box-shadow:
+        0 0 0 4px rgba(0,0,0,0.1),
+        inset 0 0 0 3px #EFEFEF,
+        inset 0 0 10px black,
+        0 0 10px rgba(0,0,0,0.2);
+    }
+
+    .clock-face {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transform: translateY(-3px) rotate(90deg); 
+      /* account for the height of the clock hands; and make the hands start from 12 o'clock */
+      /* rotate the clock-face instead of hand, refer to https://guahsu.io/2017/05/JavaScript30-02-JS-and-CSS-Clock/ */
+    }
+
+    .hand {
+      width: 50%;
+      height: 6px;
+      background: black;
+      position: absolute;
+      top: 50%;
+      transform-origin: 100%; /* 50% is the center, 100% is the rightmost point */
+      transition-timing-function: cubic-bezier(0, 2, 0.58, 1);
+      /* transition: all .25s; */
+    }
+
+    .hour-hand {
+      width: 40%;
+      margin-left: 10%;
+      /* change the width, refer to https://guahsu.io/2017/05/JavaScript30-02-JS-and-CSS-Clock/ */
+    }
+
+    .min-hand {
+      background: grey;
+      width: 45%;
+      margin-left: 5%;
+      height: 3px;
+    }
+
+    .second-hand {
+      background: lightgrey;
+      height: 1.5px;
+      
+    }
+
+    .center {
+      width: 15px;
+      height: 15px;
+      background: linear-gradient(to bottom, #018ded, lightblue);
+      position: absolute;
+      top: 48%;
+      left: 48%;
+      border-radius: 50%;
+    }
+
+  </style>
+
+  <script>
+    const secondHand = document.querySelector('.second-hand');
+    const minHand = document.querySelector('.min-hand');
+    const hourHand = document.querySelector('.hour-hand');
+
+    function setDate() {
+      const now = new Date();
+      const second = now.getSeconds();
+      const min = now.getMinutes();
+      const hour = now.getHours();
+    
+      const secondDeg = (second / 60) * 360;
+      const minDeg = (min / 60) * 360;
+      const hourDeg = (hour / 12) * 360;
+
+      secondHand.style.transform = setRotate(secondDeg);
+      minHand.style.transform = setRotate(minDeg);
+      hourHand.style.transform = setRotate(hourDeg);
+    }
+
+    function setRotate(deg) {
+      const selectHand = document.querySelector('.hand');
+      if (deg === 0) {
+        selectHand.style.transition = 'all 0s';
+      } else {
+        selectHand.style.transition = 'all .25s';
+      }
+      return `rotate(${deg}deg)`;
+    }
+    /* while rotate degree to 0, the second hand will go back ,because transition-timing-function, so reset the transition time to 0 then make it keep go forward, refer to https://guahsu.io/2017/05/JavaScript30-02-JS-and-CSS-Clock/ */
+
+    setInterval(setDate, 1000);
+    /* https://www.w3schools.com/jsref/met_win_setinterval.asp */
+
+  </script>
+</body>
+</html>
